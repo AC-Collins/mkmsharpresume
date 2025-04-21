@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import mammoth from "mammoth";
 import mkmLogo from "./assets/mkmlogo.png";
+import { Analytics } from "@vercel/analytics/react";
 
 const MKMATSResumeTransformer = () => {
   const [file, setFile] = useState(null);
