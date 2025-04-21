@@ -181,14 +181,14 @@ const MKMATSResumeTransformer = () => {
             <button
               onClick={handleConvert}
               disabled={isProcessing}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mt-6" // Added mt-6 here
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mt-6"
             >
               {isProcessing ? "Processing..." : "Optimize My Resume"}
             </button>
             {plainText && (
               <button
                 onClick={handleDownload}
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mt-6" // Added mt-6 here as well for consistency
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mt-6"
               >
                 Download Text
               </button>
@@ -215,6 +215,19 @@ const MKMATSResumeTransformer = () => {
           </h3>
           <p className="text-center text-sm text-gray-600">
             MKM SharpResume transforms visually compelling resumes into ATS-compliant formats, ensuring job seekers can stand out to both hiring algorithms and recruiters. Our mission is to level the playing field so candidates are evaluated for their skills—not their ability to navigate ATS constraints. We appreciate any feedback you may give for future features and optimization. (Beta v1.0.0)
+          </p>
+        </div>
+
+        <div className="max-w-lg w-full mt-4">
+          <p className="text-center text-sm">
+            <a
+              href="https://forms.office.com/r/hJGrPiw4aB"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-indigo-600 hover:text-indigo-800 font-medium"
+            >
+              Feedback
+            </a>
           </p>
         </div>
       </div>
