@@ -44,17 +44,14 @@ const MKMATSResumeTransformer = () => {
 
   // Normalize text for ATS compatibility
   const normalizeBullets = (text) => {
-    // Replace various bullet characters with *
     const bulletRegex = /[\u2022\u2023\u25E6\u2043\u2219\u25CF\u25CB\u25A0*\u204C\u204D\u204E\u204F\u2756\u2766\u2776\u2777\u2778\u2779\u277A\u277B\u277C\u277D\u277E\u277F]/g;
     let normalizedText = text.replace(bulletRegex, "*");
 
-    // Define common section headers
     const sectionHeaders = [
       "Skills", "Experience", "Professional Experience", "Work History", "Education", 
       "Licenses & Certifications", "Honors & Awards", "Accomplishments"
     ];
 
-    // Split text into lines and process each line
     const lines = normalizedText.split("\n");
     const result = [];
     let isListSection = false;
@@ -63,14 +60,12 @@ const MKMATSResumeTransformer = () => {
     for (let i = 0; i < lines.length; i++) {
       let line = lines[i].trim();
 
-      // Check if the line is a section header
       if (sectionHeaders.some(header => line.toLowerCase() === header.toLowerCase())) {
         isListSection = line.toLowerCase().includes("skills") ? (isSkillsSection = true) : (isListSection = true, isSkillsSection = false);
         result.push(line, "");
         continue;
       }
 
-      // Handle skills section specially
       if (isSkillsSection) {
         const items = line.split(/\*\s*|\s*,\s*/).map(item => item.trim()).filter(item => item && item !== "&");
         if (items.length > 1) {
@@ -79,7 +74,6 @@ const MKMATSResumeTransformer = () => {
         }
       }
 
-      // Handle list sections
       if (isListSection) {
         if (line.match(/^\s*\*/)) {
           const normalized = line.replace(/^\s*\*\s*/, "* ");
@@ -90,17 +84,14 @@ const MKMATSResumeTransformer = () => {
         continue;
       }
 
-      // Remove any leading bullets from non-list sections
       result.push(line.replace(/^\s*\*\s*/, ""));
     }
 
-    // Clean each line: trim and collapse multiple spaces
     const cleanedResult = result.map(line => {
       const trimmed = line.trim();
       return trimmed ? trimmed.replace(/\s+/g, " ") : "";
     });
 
-    // Join lines with \n and trim the entire text
     return cleanedResult.join("\n").trim();
   };
 
@@ -139,7 +130,7 @@ const MKMATSResumeTransformer = () => {
             pageText += item.str + " ";
             lastY = currentY;
           }
-          extractedText += pageText + "\n"; // Add single \n between pages
+          extractedText += pageText + "\n";
         }
       } else {
         const result = await mammoth.extractRawText({ arrayBuffer: fileData });
@@ -206,7 +197,7 @@ const MKMATSResumeTransformer = () => {
             </div>
           )}
 
-          <div className="flex justify-center space-x-4">
+          <div className="flex justify-center space-x-4 mt-6 mb-6">  {/* Margin-bottom here */}
             <button
               onClick={handleConvert}
               disabled={isProcessing}
