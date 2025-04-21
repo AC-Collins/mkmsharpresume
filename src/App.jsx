@@ -11,7 +11,6 @@ const MKMATSResumeTransformer = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const isMounted = useRef(true);
 
-  // Initialize PDF.js worker on mount
   useEffect(() => {
     isMounted.current = true;
     pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`;
@@ -20,8 +19,7 @@ const MKMATSResumeTransformer = () => {
     };
   }, []);
 
-  // Handle file upload and validate file type
-  function handleFileChange(e) {
+  const handleFileChange = (e) => {
     const selectedFile = e.target.files?.[0];
     const supportedTypes = [
       "application/pdf",
@@ -40,62 +38,47 @@ const MKMATSResumeTransformer = () => {
         setPlainText("");
       }
     }
-  }
+  };
 
-  // Normalize text for ATS compatibility
   const normalizeBullets = (text) => {
     const bulletRegex = /[\u2022\u2023\u25E6\u2043\u2219\u25CF\u25CB\u25A0*\u204C\u204D\u204E\u204F\u2756\u2766\u2776\u2777\u2778\u2779\u277A\u277B\u277C\u277D\u277E\u277F]/g;
     let normalizedText = text.replace(bulletRegex, "*");
-
     const sectionHeaders = [
-      "Skills", "Experience", "Professional Experience", "Work History", "Education", 
+      "Skills", "Experience", "Professional Experience", "Work History", "Education",
       "Licenses & Certifications", "Honors & Awards", "Accomplishments"
     ];
-
     const lines = normalizedText.split("\n");
     const result = [];
     let isListSection = false;
     let isSkillsSection = false;
 
-    for (let i = 0; i < lines.length; i++) {
-      let line = lines[i].trim();
-
-      if (sectionHeaders.some(header => line.toLowerCase() === header.toLowerCase())) {
-        isListSection = line.toLowerCase().includes("skills") ? (isSkillsSection = true) : (isListSection = true, isSkillsSection = false);
-        result.push(line, "");
+    for (const line of lines) {
+      const trimmedLine = line.trim();
+      if (sectionHeaders.some(header => trimmedLine.toLowerCase() === header.toLowerCase())) {
+        isListSection = trimmedLine.toLowerCase().includes("skills") ? (isSkillsSection = true) : (isListSection = true, isSkillsSection = false);
+        result.push(trimmedLine, "");
         continue;
       }
 
       if (isSkillsSection) {
-        const items = line.split(/\*\s*|\s*,\s*/).map(item => item.trim()).filter(item => item && item !== "&");
+        const items = trimmedLine.split(/\*\s*|\s*,\s*/).map(item => item.trim()).filter(item => item && item !== "&");
         if (items.length > 1) {
           result.push(...items.map(item => `* ${item}`));
           continue;
         }
       }
 
-      if (isListSection) {
-        if (line.match(/^\s*\*/)) {
-          const normalized = line.replace(/^\s*\*\s*/, "* ");
-          result.push(normalized);
-          continue;
-        }
-        result.push(line);
+      if (isListSection && trimmedLine.match(/^\s*\*/)) {
+        result.push(trimmedLine.replace(/^\s*\*\s*/, "* "));
         continue;
       }
 
-      result.push(line.replace(/^\s*\*\s*/, ""));
+      result.push(trimmedLine.replace(/^\s*\*\s*/, ""));
     }
 
-    const cleanedResult = result.map(line => {
-      const trimmed = line.trim();
-      return trimmed ? trimmed.replace(/\s+/g, " ") : "";
-    });
-
-    return cleanedResult.join("\n").trim();
+    return result.map(line => line.trim().replace(/\s+/g, " ")).filter(Boolean).join("\n");
   };
 
-  // Convert uploaded file to plain text
   const handleConvert = async () => {
     if (!file) return setError("Please select a file to convert.");
     if (!isMounted.current) return;
@@ -149,7 +132,6 @@ const MKMATSResumeTransformer = () => {
     }
   };
 
-  // Download the converted text as a .txt file
   const handleDownload = () => {
     if (!plainText) return setError("No text has been extracted yet.");
     const blob = new Blob([plainText], { type: "text/plain;charset=utf-8" });
@@ -170,17 +152,15 @@ const MKMATSResumeTransformer = () => {
           Two Resumes. One Sharp Approach.
         </p>
         <h2 className="text-center text-2xl font-bold text-gray-900 mb-2">
-          MKM ATS Resume Transformer
+          Unlock More Interviews: Optimize Your Resume for ATS
         </h2>
         <p className="text-center text-xs text-gray-600 mb-4">
-          Upload your PDF or Word document to generate an ATS-compatible resume.
+          Simply upload your resume (PDF or Word) and get an ATS-ready version in seconds.
         </p>
 
         <div className="max-w-lg w-full bg-white rounded-lg shadow-xl p-6 space-y-3">
-          <div>
-            <label htmlFor="file-upload" className="block text-sm font-medium text-gray-700 text-center">
-              Upload Resume
-            </label>
+          <div className="mb-4">
+            <label htmlFor="file-upload" className="block text-sm font-medium text-gray-700 text-center"></label>
             <input
               id="file-upload"
               type="file"
@@ -197,18 +177,18 @@ const MKMATSResumeTransformer = () => {
             </div>
           )}
 
-          <div className="flex justify-center space-x-4 mt-6 mb-6">  {/* Margin-bottom here */}
+          <div className="flex justify-center space-x-4 mb-6">
             <button
               onClick={handleConvert}
               disabled={isProcessing}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mt-6" // Added mt-6 here
             >
-              {isProcessing ? "Processing..." : "Convert"}
+              {isProcessing ? "Processing..." : "Optimize My Resume"}
             </button>
             {plainText && (
               <button
                 onClick={handleDownload}
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mt-6" // Added mt-6 here as well for consistency
               >
                 Download Text
               </button>
@@ -234,8 +214,7 @@ const MKMATSResumeTransformer = () => {
             About MKM SharpResume
           </h3>
           <p className="text-center text-sm text-gray-600">
-          MKM SharpResume transforms visually compelling resumes into ATS-compliant formats, ensuring job seekers can stand out to both hiring algorithms and recruiters. Our mission is to level the playing field so candidates are evaluated for their skills—not their ability to navigate ATS constraints. We appreciate any feedback you may give for future features and optimization. (Beta v1.0.0)
-
+            MKM SharpResume transforms visually compelling resumes into ATS-compliant formats, ensuring job seekers can stand out to both hiring algorithms and recruiters. Our mission is to level the playing field so candidates are evaluated for their skills—not their ability to navigate ATS constraints. We appreciate any feedback you may give for future features and optimization. (Beta v1.0.0)
           </p>
         </div>
       </div>
