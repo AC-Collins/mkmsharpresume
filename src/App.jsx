@@ -231,10 +231,11 @@ const MKMATSResumeTransformer = () => {
 
         <div className="max-w-lg w-full mt-6 about-section">
           <h3 className="text-center text-lg font-semibold text-gray-900 mb-2">
-            About MKM Sharp Resume
+            About MKM SharpResume
           </h3>
           <p className="text-center text-sm text-gray-600">
-            MKM Sharp Resume helps you create ATS-compatible resumes with ease. Our tool transforms your PDF or Word documents into plain text, ensuring your resume passes through applicant tracking systems effectively. With a focus on simplicity and efficiency, we empower job seekers to present their best selves.
+          MKM SharpResume transforms visually compelling resumes into ATS-compliant formats, ensuring job seekers can stand out to both hiring algorithms and recruiters. Our mission is to level the playing field so candidates are evaluated for their skills—not their ability to navigate ATS constraints. We appreciate any feedback you may give for future features and optimization. (Beta v1.0.0)
+
           </p>
         </div>
       </div>
